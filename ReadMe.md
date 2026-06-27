@@ -1,5 +1,11 @@
 # 💫 About Me:
-I'm an Electrical and Electronics Engineering student at RV College of Engineering with interests in embedded systems, PCB design, AI, and hardware product development.<br><br>I enjoy building things that solve real problems—from custom Android applications and AI-powered tools to embedded systems, research software, and electronic hardware. Most of my work revolves around taking ideas from concept to a working prototype.<br><br>My current focus is on electrochemical sensing systems, embedded AI, and developing practical engineering products through my startup, VidyuthLabs.<br><br>I believe good engineering is about understanding systems deeply, building carefully, and continuously improving through iteration.<br>
+I'm an Electrical and Electronics Engineering student at RV College of Engineering with interests in embedded systems, PCB design, AI, and hardware product development.  
+
+I enjoy building things that solve real problems—from custom Android applications and AI-powered tools to embedded systems, research software, and electronic hardware. Most of my work revolves around taking ideas from concept to a working prototype.  
+
+My current focus is on electrochemical sensing systems, embedded AI, and developing practical engineering products through my startup, VidyuthLabs.  
+
+I believe good engineering is about understanding systems deeply, building carefully, and continuously improving through iteration.<br>
 
 
 ## 🌐 Socials:
