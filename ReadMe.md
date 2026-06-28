@@ -27,7 +27,5 @@ I believe good engineering is about understanding systems deeply, building caref
 ### 🔝 Top Contributed Repo
 ![](https://github-contributor-stats.vercel.app/api?username=varshinicb1&limit=5&theme=dark&combine_all_yearly_contributions=true)
 
----
-[![](https://komarev.com/ghpvc/?username=varshinicb1&icon=0&color=0)](https://visitcount.itsvg.in)
-
+![](https://komarev.com/ghpvc/?username=varshinicb1)
 <!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
