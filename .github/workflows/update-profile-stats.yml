@@ -12,74 +12,34 @@ permissions:
 
 jobs:
   update-readme:
-    name: Update Profile README
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate stats
+      - name: Fetch stats
         id: stats
-        shell: bash
         run: |
-          USER="varshinicb1"
-          TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          U=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/varshinicb1)
+          R=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/varshinicb1/repos?per_page=100)
+          echo "stars=$(echo "$R" | jq '[.[] | .stargazers_count] | add // 0')" >> $GITHUB_OUTPUT
+          echo "forks=$(echo "$R" | jq '[.[] | .forks_count] | add // 0')" >> $GITHUB_OUTPUT
+          echo "repos=$(echo "$U" | jq -r '.public_repos')" >> $GITHUB_OUTPUT
+          echo "followers=$(echo "$U" | jq -r '.followers')" >> $GITHUB_OUTPUT
 
-          U=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/users/$USER")
-          R=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/users/$USER/repos?per_page=100")
-          E=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/users/$USER/events?per_page=5")
-
-          STARS=$(echo "$R" | jq '[.[] | .stargazers_count] | add // 0')
-          FORKS=$(echo "$R" | jq '[.[] | .forks_count] | add // 0')
-          REPS=$(echo "$U" | jq -r '.public_repos')
-          FOLS=$(echo "$U" | jq -r '.followers')
-          COMMITS=$(curl -s -H "Authorization: token $TOKEN" "https://api.github.com/search/commits?q=author:$USER" | jq -r '.total_count // 0')
-
-          echo "stars=$STARS" >> $GITHUB_OUTPUT
-          echo "forks=$FORKS" >> $GITHUB_OUTPUT
-          echo "repos=$REPS" >> $GITHUB_OUTPUT
-          echo "followers=$FOLS" >> $GITHUB_OUTPUT
-          echo "commits=$COMMITS" >> $GITHUB_OUTPUT
-
-      - name: Update README
+      - name: Update stats in README
         env:
           STARS: ${{ steps.stats.outputs.stars }}
           FORKS: ${{ steps.stats.outputs.forks }}
           REPOS: ${{ steps.stats.outputs.repos }}
           FOLLOWERS: ${{ steps.stats.outputs.followers }}
-          COMMITS: ${{ steps.stats.outputs.commits }}
         run: |
-          python3 << 'PYEOF'
-import os, re
-with open('ReadMe.md') as f:
-    content = f.read()
-stats = '''<!--START_SECTION:stats-->
+          sed -i "s/| Total Stars |.* |/| Total Stars | $STARS |/" ReadMe.md
+          sed -i "s/| Total Forks |.* |/| Total Forks | $FORKS |/" ReadMe.md
+          sed -i "s/| Public Repos |.* |/| Public Repos | $REPOS |/" ReadMe.md
+          sed -i "s/| Followers |.* |/| Followers | $FOLLOWERS |/" ReadMe.md
+          sed -i "s/| Total Commits |.* |/| Total Commits | $COMMITS |/" ReadMe.md
 
-| Metric | Value |
-|--------|-------|
-| Total Stars | {stars} |
-| Total Forks | {forks} |
-| Public Repos | {repos} |
-| Followers | {followers} |
-| Total Commits | {commits} |
-
-<!--END_SECTION:stats-->'''.format(
-    stars=os.environ['STARS'],
-    forks=os.environ['FORKS'],
-    repos=os.environ['REPOS'],
-    followers=os.environ['FOLLOWERS'],
-    commits=os.environ['COMMITS'],
-)
-content = re.sub(
-    r'<!--START_SECTION:stats-->.*?<!--END_SECTION:stats-->',
-    stats,
-    content,
-    flags=re.DOTALL,
-)
-with open('ReadMe.md', 'w') as f:
-    f.write(content)
-PYEOF
-
-      - name: Commit and push if changed
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -88,5 +48,5 @@ PYEOF
             git commit -m "chore: update profile stats [skip ci]"
             git push
           else
-            echo "No changes to commit"
+            echo "No changes"
           fi
