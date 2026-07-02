@@ -76,7 +76,7 @@ pip install bujji && ollama pull qwen3
 ![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=varshinicb1&theme=radical&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
 
 ## 🏆 GitHub Trophies
-![Trophies](https://github-profile-trophy.vercel.app/?username=varshinicb1&theme=radical&no-frame=false&no-bg=false&margin-w=4&row=2&column=4)
+![Trophies](https://github-profile-trophy-one.vercel.app/?username=varshinicb1&theme=radical&no-frame=false&no-bg=false&margin-w=4&row=2&column=4)
 
 ## 📈 Contribution Graph
 ![Contribution Graph](https://github-readme-activity-graph.vercel.app/graph?username=varshinicb1&theme=radical&hide_border=true&area=true)
