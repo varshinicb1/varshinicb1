@@ -41,7 +41,6 @@ jobs:
           echo "commits=$COMMITS" >> $GITHUB_OUTPUT
 
       - name: Update README
-        shell: python3
         env:
           STARS: ${{ steps.stats.outputs.stars }}
           FORKS: ${{ steps.stats.outputs.forks }}
@@ -49,12 +48,11 @@ jobs:
           FOLLOWERS: ${{ steps.stats.outputs.followers }}
           COMMITS: ${{ steps.stats.outputs.commits }}
         run: |
-          import os, re
-
-          with open('ReadMe.md') as f:
-              content = f.read()
-
-          stats = '''<!--START_SECTION:stats-->
+          python3 << 'PYEOF'
+import os, re
+with open('ReadMe.md') as f:
+    content = f.read()
+stats = '''<!--START_SECTION:stats-->
 
 | Metric | Value |
 |--------|-------|
@@ -65,22 +63,21 @@ jobs:
 | Total Commits | {commits} |
 
 <!--END_SECTION:stats-->'''.format(
-              stars=os.environ['STARS'],
-              forks=os.environ['FORKS'],
-              repos=os.environ['REPOS'],
-              followers=os.environ['FOLLOWERS'],
-              commits=os.environ['COMMITS'],
-          )
-
-          content = re.sub(
-              r'<!--START_SECTION:stats-->.*?<!--END_SECTION:stats-->',
-              stats,
-              content,
-              flags=re.DOTALL,
-          )
-
-          with open('ReadMe.md', 'w') as f:
-              f.write(content)
+    stars=os.environ['STARS'],
+    forks=os.environ['FORKS'],
+    repos=os.environ['REPOS'],
+    followers=os.environ['FOLLOWERS'],
+    commits=os.environ['COMMITS'],
+)
+content = re.sub(
+    r'<!--START_SECTION:stats-->.*?<!--END_SECTION:stats-->',
+    stats,
+    content,
+    flags=re.DOTALL,
+)
+with open('ReadMe.md', 'w') as f:
+    f.write(content)
+PYEOF
 
       - name: Commit and push if changed
         run: |
