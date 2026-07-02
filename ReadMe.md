@@ -62,8 +62,8 @@ pip install bujji && ollama pull qwen3
 | Total Forks | 1 |
 | Public Repos | 85 |
 | Followers | 6 |
-| Total Commits |  |
-| Grade | — |
+| Total Commits | 437 |
+| Grade | **A** |
 
 </span>
 <!--END_SECTION:stats-->
