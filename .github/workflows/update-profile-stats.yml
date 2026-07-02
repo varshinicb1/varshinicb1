@@ -21,10 +21,27 @@ jobs:
         run: |
           U=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/varshinicb1)
           R=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/varshinicb1/repos?per_page=100)
-          echo "stars=$(echo "$R" | jq '[.[] | .stargazers_count] | add // 0')" >> $GITHUB_OUTPUT
-          echo "forks=$(echo "$R" | jq '[.[] | .forks_count] | add // 0')" >> $GITHUB_OUTPUT
-          echo "repos=$(echo "$U" | jq -r '.public_repos')" >> $GITHUB_OUTPUT
-          echo "followers=$(echo "$U" | jq -r '.followers')" >> $GITHUB_OUTPUT
+          C=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/search/commits?q=author:varshinicb1")
+          STARS=$(echo "$R" | jq '[.[] | .stargazers_count] | add // 0')
+          FORKS=$(echo "$R" | jq '[.[] | .forks_count] | add // 0')
+          REPS=$(echo "$U" | jq -r '.public_repos')
+          FOLS=$(echo "$U" | jq -r '.followers')
+          COMMITS=$(echo "$C" | jq -r '.total_count // 0')
+          if [ "$STARS" -ge 500 ]; then RANK="S"
+          elif [ "$STARS" -ge 200 ]; then RANK="A+"
+          elif [ "$STARS" -ge 100 ]; then RANK="A"
+          elif [ "$STARS" -ge 50 ]; then RANK="A-"
+          elif [ "$STARS" -ge 20 ]; then RANK="B+"
+          elif [ "$STARS" -ge 10 ]; then RANK="B"
+          elif [ "$STARS" -ge 5 ]; then RANK="B-"
+          else RANK="C"
+          fi
+          echo "stars=$STARS" >> $GITHUB_OUTPUT
+          echo "forks=$FORKS" >> $GITHUB_OUTPUT
+          echo "repos=$REPS" >> $GITHUB_OUTPUT
+          echo "followers=$FOLS" >> $GITHUB_OUTPUT
+          echo "commits=$COMMITS" >> $GITHUB_OUTPUT
+          echo "rank=$RANK" >> $GITHUB_OUTPUT
 
       - name: Update stats in README
         env:
@@ -32,12 +49,15 @@ jobs:
           FORKS: ${{ steps.stats.outputs.forks }}
           REPOS: ${{ steps.stats.outputs.repos }}
           FOLLOWERS: ${{ steps.stats.outputs.followers }}
+          COMMITS: ${{ steps.stats.outputs.commits }}
+          RANK: ${{ steps.stats.outputs.rank }}
         run: |
           sed -i "s/| Total Stars |.* |/| Total Stars | $STARS |/" ReadMe.md
           sed -i "s/| Total Forks |.* |/| Total Forks | $FORKS |/" ReadMe.md
           sed -i "s/| Public Repos |.* |/| Public Repos | $REPOS |/" ReadMe.md
           sed -i "s/| Followers |.* |/| Followers | $FOLLOWERS |/" ReadMe.md
           sed -i "s/| Total Commits |.* |/| Total Commits | $COMMITS |/" ReadMe.md
+          sed -i "s/| Grade |.* |/| Grade | **$RANK** |/" ReadMe.md
 
       - name: Commit and push
         run: |
