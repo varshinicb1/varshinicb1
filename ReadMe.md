@@ -61,7 +61,7 @@ pip install bujji && ollama pull qwen3
 
 | Metric | Value |
 |--------|-------|
-| Total Stars | 134 |
+| Total Stars | 135 |
 | Total Forks | 3 |
 | Public Repos | 109 |
 | Followers | 9 |
